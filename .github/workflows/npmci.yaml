@@ -32,10 +32,10 @@ jobs:
 
             - name: Install dependencies
               if: steps.cache.outputs.cache-hit != 'true'
-              run: npm install
+              run: cd simple-reactjs-app-master && npm install
 
             - name: Compile code
-              run: npm run build
+              run: cd simple-reactjs-app-master && npm run build
 
             - name: Upload build artifact
               uses: actions/upload-artifact@v4
