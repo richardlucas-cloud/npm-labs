@@ -141,15 +141,16 @@ jobs:
           uses: github/codeql-action/analyze@v3
           with:
             category: "/language:${{ matrix.language }}"
-            
+
     deploy:
       needs: 
         - build
         - lint
         - test
-      uses: ./.github/workflows/npmcd.yaml
+      uses: ./.github/workflows/npmcd.yaml@main
       with:
         artifact-name: npm-build-artifact
+
 
       
  

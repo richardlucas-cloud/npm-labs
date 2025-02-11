@@ -5,7 +5,7 @@ on:
         inputs:
             artifacts-name:
                 description: The name of the depoyment artifact
-                required: false
+                required: true
                 default: npm-build-artifact
                 type: string
 jobs:
@@ -17,7 +17,7 @@ jobs:
               uses: actions/download@artifacts@v4
               with:
                 name: ${{ inputs.artifacts-name }}
-                
+
             - name: list files 
               run: ls
 
