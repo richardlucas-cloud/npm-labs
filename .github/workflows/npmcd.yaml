@@ -1,0 +1,25 @@
+name: CD pipeline
+
+on:
+    workflow_call:
+        inputs:
+            artifacts-name:
+                description: The name of the depoyment artifact
+                required: false
+                default: npm-build-artifact
+                type: string
+jobs:
+    deploy:
+        name: deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: get code
+              uses: actions/download@artifacts@v4
+              with:
+                name: ${{ inputs.artifacts-name }}
+                
+            - name: list files 
+              run: ls
+
+            - name: output information
+              run: echo "deploying & uploading"
