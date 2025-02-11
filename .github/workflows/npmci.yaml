@@ -54,7 +54,7 @@ jobs:
             uses: actions/checkout@v4
 
           - name: audit check
-            run: $ npm audit --audit-level=moderate
+            run: cd simple-reactjs-app-master && npm audit --audit-level=moderate
 
         
       
