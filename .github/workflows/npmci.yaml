@@ -161,13 +161,6 @@ jobs:
         url: ${{ steps.deployment.outputs.page_url }}
 
       steps:
-        - name: get code
-          uses: actions/download@artifacts@v4
-          with:
-            name: npm-build-artifact
-               
-        - name: list files 
-          run: ls
 
         - name: Deploy to GitHub Pages
           id: deployment
