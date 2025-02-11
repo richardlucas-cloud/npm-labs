@@ -110,9 +110,9 @@ jobs:
           uses: actions/checkout@v4
 
         - name: intiliaze codeQL
-          uses: github/codeql-action/init@2
+          uses: github/codeql-action/init@3
           with:
-            config-file: ./.github/codeql/codeql-config.yaml
+            config-file: ./.github/codeql/codeql.config.yml
 
         - name: Setup Node.js
           uses: actions/setup-node@v4
