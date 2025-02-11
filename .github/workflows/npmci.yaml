@@ -56,6 +56,9 @@ jobs:
           uses: actions/checkout@v4
 
         - name: audit check
+          run: cd frontend &&  npm audit fix --force
+
+        - name: audit check
           run: cd frontend && npm audit --audit-level=moderate
 
     lint:
