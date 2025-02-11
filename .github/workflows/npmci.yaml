@@ -9,6 +9,8 @@ on:
 jobs:
     build:
         name: npm builds
+        needs: 
+          - audit
         runs-on: ubuntu-latest
         outputs:
           cache_hit: ${{ steps.set_cache_hit.outputs.cache_hit }}
@@ -25,8 +27,8 @@ jobs:
               uses: actions/cache@v4
               id: cache
               with:
-                path: simple-reactjs-app-master/node_modules
-                key: ${{ runner.os }}-${{ hashFiles('simple-reactjs-app-master/package-lock.json') }}
+                path: frontend/node_modules
+                key: ${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
 
             - name: Set cache hit output
               id: set_cache_hit
@@ -34,16 +36,27 @@ jobs:
 
             - name: Install dependencies
               if: steps.cache.outputs.cache-hit != 'true'
-              run: cd simple-reactjs-app-master && npm install
+              run: cd frontend && npm install
 
             - name: Compile code
-              run: cd simple-reactjs-app-master && npm run build
+              run: cd frontend && npm run build
 
             - name: Upload build artifact
               uses: actions/upload-artifact@v4
               with:
                 name: npm-build-artifact
-                path: simple-reactjs-app-master/build
+                path: frontend/build
+
+    audit:
+
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: audit check
+          run: cd frontend && npm audit --audit-level=moderate
 
     lint:
         name: npm lint
@@ -61,7 +74,7 @@ jobs:
 
             - name: Install dependencies
               if: needs.build.outputs.cache_hit != 'true'
-              run: cd simple-reactjs-app-master && npm install
+              run: cd frontend && npm install
 
             - name: Run linting
-              run: cd simple-reactjs-app-master && npm run test
+              run: cd frontend && npm run test
