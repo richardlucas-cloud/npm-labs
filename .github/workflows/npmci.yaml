@@ -1,0 +1,48 @@
+name: CI Pipeline
+
+on:
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: npm builds
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout respository
+              uses: actions/checkout@v4
+
+            - name: setup node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: 'npm'
+                cache-dependency-path: simple-reactjs-app/package-lock.json
+
+            - name: install dependendies
+              run: npm install
+
+            - name: combile code
+              run: npm run build
+
+            - uses: actions/upload-artifact@v4
+              with:
+                name: npm build artifact
+                path: build-artifact
+    audit:
+        name: npm aduit
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout respository
+              uses: actions/checkout@v4
+
+            - name: Check for vulnerabilities
+              run: npm audit --production --audit-level=low
+            
+
+    
+
+            
