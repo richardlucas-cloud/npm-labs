@@ -9,6 +9,8 @@ on:
 jobs:
     build:
         name: npm builds
+        needs:
+          - audit
         runs-on: ubuntu-latest
 
         steps:
@@ -42,6 +44,20 @@ jobs:
               with:
                 name: npm-build-artifact
                 path: build
+    
+    audit:
+      name: npm audit
+      runs-on: ubuntu-latest
+
+      steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: audit check
+            run: $ npm audit --audit-level=moderate
+
+        
+      
             
 
     
