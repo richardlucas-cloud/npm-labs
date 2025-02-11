@@ -64,4 +64,4 @@ jobs:
               run: cd simple-reactjs-app-master && npm install
 
             - name: Run linting
-              run: cd simple-reactjs-app-master && npm run lint
+              run: cd simple-reactjs-app-master && npm run test
