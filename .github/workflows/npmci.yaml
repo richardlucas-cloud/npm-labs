@@ -80,4 +80,50 @@ jobs:
               run: cd frontend && npm install
 
             - name: Run linting
-              run: cd frontend && npm run test
+              run: cd frontend && npm run lint
+
+    test:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout repository
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
+
+        - name: Install dependencies
+          if: needs.build.outputs.cache_hit != 'true'
+          run: cd frontend && npm install
+
+        - name: Run unit test
+          run: cd frontend && npm run test
+
+    static-analysis:
+      needs: build
+      name: CodeQL
+      runs-on: ubuntu-latest
+      steps:
+        - name: checkout repository
+          uses: actions/checkout@v4
+
+        - name: intiliaze codeQL
+          uses: github/codeql-action/init@2
+          with:
+            config-file: ./.github/codeql/codeql-config.yaml
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+              node-version: 20
+  
+        - name: Install dependencies
+          if: needs.build.outputs.cache_hit != 'true'
+          run: cd frontend && npm install
+  
+        - name: Run unit test
+          run: cd frontend && npm run build
+  
+
