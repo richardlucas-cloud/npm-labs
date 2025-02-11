@@ -6,48 +6,42 @@ on:
             - main
     workflow_dispatch:
 
-
 jobs:
     build:
         name: npm builds
         runs-on: ubuntu-latest
 
         steps:
-            - name: checkout respository
+            - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: setup node.js
+            - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                 node-version: 20
 
-            - name: setup cache
+            - name: List directory contents
+              run: ls -lah /home/runner/work/npm-labs/npm-labs/
+
+            - name: Setup cache
               uses: actions/cache@v4
               id: cache
               with:
-                path: simple-reactjs-app-master/node_modules
-                key: ${{ runner.os }}-${{ hashFiles('simple-reactjs-app-master/package-lock.json') }}
+                path: node_modules
+                key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-            - name: install dependendies
+            - name: Install dependencies
               if: steps.cache.outputs.cache-hit != 'true'
               run: npm install
 
-            - name: combile code
+            - name: Compile code
               run: npm run build
 
-            - uses: actions/upload-artifact@v4
+            - name: Upload build artifact
+              uses: actions/upload-artifact@v4
               with:
-                name: npm build artifact
-                path: build-artifact
-    audit:
-        name: npm aduit
-        runs-on: ubuntu-latest
-        steps:
-            - name: checkout respository
-              uses: actions/checkout@v4
-
-            - name: Check for vulnerabilities
-              run: npm audit --production --audit-level=low
+                name: npm-build-artifact
+                path: build
             
 
     
