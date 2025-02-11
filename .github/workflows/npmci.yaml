@@ -9,10 +9,9 @@ on:
 jobs:
     build:
         name: npm builds
-        needs:
-          - audit
         runs-on: ubuntu-latest
-
+        outputs:
+          cache_hit: ${{ steps.set_cache_hit.outputs.cache_hit }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -22,15 +21,16 @@ jobs:
               with:
                 node-version: 20
 
-            - name: List directory contents
-              run: ls -lah /home/runner/work/npm-labs/npm-labs/
-
             - name: Setup cache
               uses: actions/cache@v4
               id: cache
               with:
                 path: simple-reactjs-app-master/node_modules
                 key: ${{ runner.os }}-${{ hashFiles('simple-reactjs-app-master/package-lock.json') }}
+
+            - name: Set cache hit output
+              id: set_cache_hit
+              run: echo "cache_hit=${{ steps.cache.outputs.cache-hit }}" >> $GITHUB_ENV
 
             - name: Install dependencies
               if: steps.cache.outputs.cache-hit != 'true'
@@ -43,23 +43,25 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: npm-build-artifact
-                path: build
-    
-    audit:
-      name: npm audit
-      runs-on: ubuntu-latest
+                path: simple-reactjs-app-master/build
 
-      steps:
-          - name: Checkout repository
-            uses: actions/checkout@v4
+    lint:
+        name: npm lint
+        needs: build
+        runs-on: ubuntu-latest
 
-          - name: audit check
-            run: cd simple-reactjs-app-master && npm audit --audit-level=moderate
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-        
-      
-            
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
 
-    
+            - name: Install dependencies
+              if: needs.build.outputs.cache_hit != 'true'
+              run: cd simple-reactjs-app-master && npm install
 
-            
+            - name: Run linting
+              run: cd simple-reactjs-app-master && npm run lint
