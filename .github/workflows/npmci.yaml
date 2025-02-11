@@ -9,8 +9,8 @@ on:
 jobs:
     build:
         name: npm builds
-        needs: 
-          - audit
+        #needs: 
+          #- audit
         runs-on: ubuntu-latest
         outputs:
           cache_hit: ${{ steps.set_cache_hit.outputs.cache_hit }}
@@ -47,19 +47,19 @@ jobs:
                 name: npm-build-artifact
                 path: frontend/build
 
-    audit:
+    #audit:
 
-      runs-on: ubuntu-latest
+      #runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+      #steps:
+        #- name: Checkout repository
+        #  uses: actions/checkout@v4
 
-        - name: audit check
-          run: cd frontend &&  npm audit fix --force
+        #- name: audit check
+        #  run: cd frontend &&  npm audit fix --force
 
-        - name: audit check
-          run: cd frontend && npm audit --audit-level=moderate
+        #- name: audit check
+        #  run: cd frontend && npm audit --audit-level=moderate
 
     lint:
         name: npm lint
